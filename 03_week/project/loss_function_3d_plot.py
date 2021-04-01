@@ -30,14 +30,14 @@ y_ideal = model(w0=w0, w1=w1, x=x)
 y = y_ideal + noise
 
 # plot
-fig = plt.figure(constrained_layout=False, figsize=(10,6))
+fig = plt.figure(constrained_layout=False, figsize=(10,5))
 grid_spec = fig.add_gridspec(ncols=2, nrows=1)
 ax1 = fig.add_subplot(grid_spec[0])
 ax2 = fig.add_subplot(grid_spec[1], projection='3d')
 
 # 2D ---------------
-ax1.scatter(x=x, y=y, label='Data')
-ax1.plot(x, y_ideal, color='k', label='Ideal fit')
+ax1.scatter(x=x, y=y, label='Data', alpha=0.5)
+ax1.plot(x, y_ideal, color='k', label=f'Ideal fit ($w_0={w0}$; $w_1={w1}$)')
 ax1.legend()
 
 # 3D ---------------
