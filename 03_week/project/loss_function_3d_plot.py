@@ -59,12 +59,11 @@ for i1 in range(Z.shape[0]):
         error = lasso_error(w0=w0, w1=w1, x_true=x, y_true=y, alpha=1.0)
         Z[i1,i2] = error
 
-# create light source object.
+# create light source object
 ls = LightSource()
 rgb = ls.shade(Z, plt.cm.RdYlBu)
 
-surf = ax2.plot_surface(X, Y, Z, rcount=500, ccount=500, linewidth=0, facecolors=rgb, antialiased=False, shade=True, lightsource=ls) #viridis
-#ax.scatter(0,1,lasso_error(10,0,x,y,alpha=1.0), c='green')
+surf = ax2.plot_surface(X, Y, Z, rcount=500, ccount=500, linewidth=0, facecolors=rgb, antialiased=False, shade=True, lightsource=ls)
 ax2.set_xlabel('intercept $w_0$')
 ax2.set_ylabel('slope $w_1$')
 ax2.set_zlabel('error')
