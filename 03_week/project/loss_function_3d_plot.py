@@ -21,12 +21,27 @@ def lasso_error(w0, w1, x_true, y_true, alpha=1.0):
 #-------------------------------------------------
 
 # generate noisy data on a line:
-w0    = 25.0 # intercept
-w1    = 0.0 # slope
+w0 = 0.0 # intercept
+w1 = 25.0 # slope
 num_samples = 150
-x     = np.random.randn(num_samples)
-noise = np.random.randn(num_samples) * 0.4
-y = w1*x + w0 + noise
+x = np.random.randn(num_samples)
+noise = np.random.randn(num_samples) * 0.3*w1
+y_ideal = model(w0=w0, w1=w1, x=x)
+y = y_ideal + noise
+
+# plot
+fig = plt.figure(constrained_layout=False, figsize=(10,6))
+grid_spec = fig.add_gridspec(ncols=2, nrows=1)
+ax1 = fig.add_subplot(grid_spec[0])
+ax2 = fig.add_subplot(grid_spec[1], projection='3d')
+
+# 2D ---------------
+ax1.scatter(x=x, y=y, label='Data')
+ax1.plot(x, y_ideal, color='k', label='Ideal fit')
+ax1.legend()
+
+# 3D ---------------
+# https://matplotlib.org/stable/gallery/mplot3d/surface3d.html
 
 # calculate error for many pairs of w0 and w1
 limit = 50
@@ -44,24 +59,19 @@ for i1 in range(Z.shape[0]):
         error = lasso_error(w0=w0, w1=w1, x_true=x, y_true=y, alpha=1.0)
         Z[i1,i2] = error
 
-
-#fig, (ax1, ax2) = plt.subplots(ncols=2)
-#ax1.scatter(x=x, y=y)
-#ax1.legend()
-
-# https://matplotlib.org/stable/gallery/mplot3d/surface3d.html
-fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
-
 # create light source object.
 ls = LightSource()
 rgb = ls.shade(Z, plt.cm.RdYlBu)
 
-surf = ax.plot_surface(X, Y, Z, rcount=500, ccount=500, linewidth=0, facecolors=rgb, antialiased=False, shade=True, lightsource=ls) #viridis
+surf = ax2.plot_surface(X, Y, Z, rcount=500, ccount=500, linewidth=0, facecolors=rgb, antialiased=False, shade=True, lightsource=ls) #viridis
 #ax.scatter(0,1,lasso_error(10,0,x,y,alpha=1.0), c='green')
-ax.set_xlabel('intercept w0')
-ax.set_ylabel('slope w1')
-ax.set_zlabel('error')
+ax2.set_xlabel('intercept $w_0$')
+ax2.set_ylabel('slope $w_1$')
+ax2.set_zlabel('error')
 
-ax.set_zlim(-1, 5000)
+ax2.set_zlim(-1, 5000)
 #fig.colorbar(surf, shrink=0.5, aspect=5)
+
+# https://matplotlib.org/stable/gallery/mplot3d/rotate_axes3d_sgskip.html
+
 plt.show()
