@@ -68,9 +68,13 @@ ax2.set_xlabel('intercept $w_0$')
 ax2.set_ylabel('slope $w_1$')
 ax2.set_zlabel('error')
 
-ax2.set_zlim(-1, 5000)
-#fig.colorbar(surf, shrink=0.5, aspect=5)
+ax2.set_zlim(-1, 6000)
 
 # https://matplotlib.org/stable/gallery/mplot3d/rotate_axes3d_sgskip.html
+#ax2.view_init(10, 40) 
+#ax2.view_init(38, 160)
+ax2.view_init(10, 12)
+
+#fig.colorbar(surf, shrink=0.5, aspect=5)
 
 plt.show()
