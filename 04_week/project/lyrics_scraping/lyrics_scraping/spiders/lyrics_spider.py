@@ -1,4 +1,5 @@
 import scrapy
+from lyrics_scraping.items import LyricsScrapingItem
 
 # Use of meta param: https://stackoverflow.com/questions/20663162/scrapy-passing-item-between-methods/20663659
 
@@ -12,13 +13,15 @@ class LyricsSpider(scrapy.Spider):
             parsed_artists = ( artist.strip() for artist in artists.split(',') )
             for artist in parsed_artists:
                 self.logger.info(f'Searching for artist "{artist}"')
+                item = LyricsScrapingItem()
+                item['artist_searched'] = artist
 
                 # Example search type "Artist" with term "James Brown"
                 # https://www.lyrics.com/serp.php?st=james+brown&qtype=2
                 yield scrapy.FormRequest(url="https://www.lyrics.com/serp.php"
                                         ,formdata={'st': artist, 'qtype': '2'}
                                         ,method='GET'
-                                        ,meta={'item': dict(artist_searched=artist)}
+                                        ,meta={'item': item}
                                         ,callback=self.parse_search_results)
 
     def parse_search_results(self, response):
@@ -47,11 +50,12 @@ class LyricsSpider(scrapy.Spider):
         item = response.meta['item']
 
         if 'no-lyrics' in response.url: # check for 'https://www.lyrics.com/no-lyrics.php'
+            self.logger.info(f'Invalid link led to "{response.url}"')
             return
 
         item['song_title'] = response.css('#lyric-title-text::text').get()
         #item['song_artists'] = response.css('hgroup .lyric-artist a::text').getall()[:-1]
         item['lyrics'] = ''.join( response.css('#lyric-body-text *::text').getall() )
 
-        self.logger.info('Parsed lyrics "{}" by "{}"'.format(item['artist_found'], item['song_title']))
+        self.logger.info('Parsed lyrics "{}" "{}"'.format(item['artist_found'], item['song_title']))
         yield item
