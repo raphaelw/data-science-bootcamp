@@ -2,16 +2,16 @@ import scrapy
 
 # Use of meta param: https://stackoverflow.com/questions/20663162/scrapy-passing-item-between-methods/20663659
 
-class QuotesSpider(scrapy.Spider):
+class LyricsSpider(scrapy.Spider):
     name = "lyrics"
 
     def start_requests(self):
         artists = getattr(self, 'artists', None)
         if artists is not None:
-            self.log(f'Artists="{artists}"')
+            self.logger.info(f'Input artists "{artists}"')
             parsed_artists = ( artist.strip() for artist in artists.split(',') )
             for artist in parsed_artists:
-                self.log(f'Searching for Artist "{artist}"')
+                self.logger.info(f'Searching for artist "{artist}"')
 
                 # Example search type "Artist" with term "James Brown"
                 # https://www.lyrics.com/serp.php?st=james+brown&qtype=2
@@ -26,18 +26,18 @@ class QuotesSpider(scrapy.Spider):
 
         element = response.css('a.name')
         artist = element.css('::text').get()
-        relative_url = element.css('::attr(href)').get()
+        relative_artist_url = element.css('::attr(href)').get()
 
-        self.log(f'Found Artist "{artist}"')
+        self.logger.info(f'Found artist "{artist}"')
         item['artist_found'] = artist
 
-        yield response.follow(relative_url, self.parse_artist_page, meta={'item':item})
+        yield response.follow(relative_artist_url, self.parse_artist_page, meta={'item':item})
 
     def parse_artist_page(self, response):
         item = response.meta['item']
 
-        for relative_url in response.css('div.tdata-ext table a::attr(href)').getall():
-            yield response.follow(relative_url, self.parse_song_lyrics_page, meta={'item':item})
+        for relative_song_url in response.css('div.tdata-ext table a::attr(href)').getall():
+            yield response.follow(relative_song_url, self.parse_song_lyrics_page, meta={'item':item})
 
     def parse_song_lyrics_page(self, response):
         item = response.meta['item']
@@ -49,4 +49,5 @@ class QuotesSpider(scrapy.Spider):
         #item['song_artists'] = response.css('hgroup .lyric-artist a::text').getall()[:-1]
         item['lyrics'] = ''.join( response.css('#lyric-body-text *::text').getall() )
 
+        self.logger.info('Parsed lyrics "{}" by "{}"'.format(item['artist_found'], item['song_title']))
         yield item
