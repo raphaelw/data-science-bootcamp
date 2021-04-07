@@ -8,4 +8,4 @@ Basic song lyrics scraper for https://www.lyrics.com/
 
 Single Spider:
 
-    scrapy runspider -L INFO -O lyrics.json lyrics_spider.py -a artists="Elizabeth Shepherd"
+    scrapy runspider -L INFO -O lyrics.json lyrics_spider.py -a artists="Elizabeth Shepherd, Zero 7"
