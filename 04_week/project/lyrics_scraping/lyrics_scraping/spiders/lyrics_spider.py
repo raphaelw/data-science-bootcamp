@@ -32,7 +32,7 @@ class LyricsSpider(scrapy.Spider):
             self.logger.info('No artist found for "{}"'.format(item['artist_searched']))
             return
 
-        artist = element.css('::text').get()
+        artist = element.css('::attr(title)').get()
         relative_artist_url = element.css('::attr(href)').get()
 
         self.logger.info(f'Found artist "{artist}"')
