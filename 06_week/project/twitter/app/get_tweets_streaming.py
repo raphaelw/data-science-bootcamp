@@ -2,7 +2,7 @@ import config
 import logging
 from tweepy import OAuthHandler, Stream
 from tweepy.streaming import StreamListener
-
+import pymongo
 
 def authenticate():
     """Function for handling Twitter Authentication. Please note
@@ -29,7 +29,19 @@ class MaxTweetsListener(StreamListener):
         # set the instance attributes
         self.max_tweets = max_tweets
         self.counter = 0
+
+        # database
+        self.client = pymongo.MongoClient(host='mongodb'
+                                         ,port=27017
+                                         ,username='mongo_user'
+                                         ,password='mongo_password')
+
+        database_name = 'twitter'
+        self.db = self.client[database_name]
         
+        collection_name = 'tweets'
+        self.db_collection = self.db[collection_name]
+
     def on_connect(self):
         logging.info('connected. listening for incoming tweets')
 
@@ -47,6 +59,7 @@ class MaxTweetsListener(StreamListener):
             'followers_count': status.user.followers_count
         }
 
+        self.db_collection.insert_one(tweet)
         logging.info(f'New tweet arrived: {tweet["text"]}')
 
         # check if we have enough tweets collected
