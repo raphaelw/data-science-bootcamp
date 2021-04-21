@@ -1,1 +1,16 @@
 version: '3'
+
+services:
+    mongodb:
+        image: mongo:4.4.5
+        ports:
+            - 27017:27017
+        restart: always
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: mongo_user
+            MONGO_INITDB_ROOT_PASSWORD: mongo_password
+    
+    tweet_collector:
+        build: twitter/
+        depends_on:
+            - mongodb
