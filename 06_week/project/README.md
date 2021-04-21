@@ -13,4 +13,4 @@ Sentiment analysis of tweets implemented as a pipeline of containerized processi
     * Networks
 * Sentiment analysis using rule based NLP https://github.com/cjhutto/vaderSentiment
 * ETL into relational PostgreSQL
-* Visualise results
+* Visualize results
