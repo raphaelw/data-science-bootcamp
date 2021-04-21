@@ -1,4 +1,5 @@
 import config
+import logging
 from tweepy import OAuthHandler, Stream
 from tweepy.streaming import StreamListener
 
@@ -30,7 +31,7 @@ class MaxTweetsListener(StreamListener):
         self.counter = 0
         
     def on_connect(self):
-        print('connected. listening for incoming tweets')
+        logging.info('connected. listening for incoming tweets')
 
 
     def on_status(self, status):
@@ -46,7 +47,7 @@ class MaxTweetsListener(StreamListener):
             'followers_count': status.user.followers_count
         }
 
-        print(f'New tweet arrived: {tweet["text"]}')
+        logging.info(f'New tweet arrived: {tweet["text"]}')
 
         # check if we have enough tweets collected
         if self.max_tweets == self.counter:
@@ -58,12 +59,14 @@ class MaxTweetsListener(StreamListener):
 
     def on_error(self, status):
         if status == 420:
-            print(f'Rate limit applies. Stop the stream.')
+            logging.info(f'Rate limit applies. Stop the stream.')
             return False
 
 
 if __name__ == '__main__':
+    logging.basicConfig(level=logging.INFO)
+    
     auth = authenticate()
     listener = MaxTweetsListener(max_tweets=100)
     stream = Stream(auth, listener)
-    stream.filter(track=['berlin'], languages=['en'], is_async=False)
+    stream.filter(track=['jazz'], languages=['en'], is_async=False)
