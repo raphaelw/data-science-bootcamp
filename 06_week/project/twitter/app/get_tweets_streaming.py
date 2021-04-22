@@ -33,8 +33,8 @@ class MaxTweetsListener(StreamListener):
         # database
         self.client = pymongo.MongoClient(host='mongodb'
                                          ,port=27017
-                                         ,username='mongo_user'
-                                         ,password='mongo_password')
+                                         ,username='user'
+                                         ,password='pass')
 
         database_name = 'twitter'
         self.db = self.client[database_name]
