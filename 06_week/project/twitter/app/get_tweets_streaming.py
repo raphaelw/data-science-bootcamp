@@ -1,5 +1,6 @@
 import config
 import logging
+from time import time
 from tweepy import OAuthHandler, Stream
 from tweepy.streaming import StreamListener
 import pymongo
@@ -56,12 +57,13 @@ class MaxTweetsListener(StreamListener):
         tweet = {
             'text': status.text,
             'username': status.user.screen_name,
-            'followers_count': status.user.followers_count
+            'followers_count': status.user.followers_count,
+            'timestamp_received': int(time())
         }
 
         self.db_collection.insert_one(tweet)
         logging.info(f'New tweet arrived: {tweet["text"]}')
-
+        
         # check if we have enough tweets collected
         if self.max_tweets == self.counter:
             # reset the counter
