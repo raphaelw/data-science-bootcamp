@@ -62,7 +62,11 @@ class MaxTweetsListener(StreamListener):
         }
 
         self.db_collection.insert_one(tweet)
-        logging.info(f'New tweet arrived: {tweet["text"]}')
+        
+        # log
+        truncated = lambda s,lim: s[:lim] if len(s) > lim else s
+        truncated_tweet = repr( truncated(tweet["text"],60) )
+        logging.info(f'New tweet arrived: {truncated_tweet}')
         
         # check if we have enough tweets collected
         if self.max_tweets == self.counter:

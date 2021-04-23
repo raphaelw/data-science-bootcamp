@@ -13,14 +13,17 @@
 
 ## put these into your requirement.txt file
 import pymongo
-import vaderSentiment
 import sqlalchemy
 import psycopg2
+
+from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 import time
 import logging
 
 # Further Idea: Listen for changes on mongo replica https://stackoverflow.com/a/59251942
+
+truncated = lambda s,lim: s[:lim] if len(s) > lim else s
 
 def extract(mongo_collection, seen_object_ids):
     ''' Extracts tweets from Mongo DB '''
@@ -30,19 +33,18 @@ def extract(mongo_collection, seen_object_ids):
     tweet_cursor = mongo_collection.find().sort('_id',-1).limit(50).sort('_id',1)
     for tweet in tweet_cursor:
         object_id = tweet['_id']
-        logging.info('ObjectID ' + str(object_id) + ' text: ' + repr(tweet['text']))
         if not object_id in seen_object_ids:
+            logging.info('ObjectID {} text: {}'.format(str(object_id), repr(truncated(tweet['text'],60))))
             seen_object_ids.add(object_id)
             extracted_tweets.append(tweet)
     
     return extracted_tweets
 
-def transform(extracted_tweets):
+def transform(extracted_tweets, vader_analyzer):
     '''Performs your desired transformations: sentiment analysis, text cleaning, emoji managmenet '''
     transformed_tweets = []
     for tweet in extracted_tweets:
-        # TODO
-        tweet['sentiment'] = 0.5
+        tweet['sentiment'] = vader_analyzer.polarity_scores(tweet['text'])['compound']
         transformed_tweets.append(tweet)
 
     return transformed_tweets
@@ -65,7 +67,7 @@ def connect_to_mongo():
     return mongo_client
 
 def connect_to_postgres():
-    engine = sqlalchemy.create_engine('postgresql://postgres:postgres@postgres/postgres', echo=True)
+    engine = sqlalchemy.create_engine('postgresql://postgres:postgres@postgres/postgres', echo=False)
     create_query = """
         CREATE TABLE IF NOT EXISTS tweets (
             "id"        SERIAL PRIMARY KEY,
@@ -75,8 +77,7 @@ def connect_to_postgres():
             "sentiment" REAL
         );
         """
-    result = engine.execute(create_query)
-    logging.info(result)
+    engine.execute(create_query)
     return engine
 
 if __name__ == '__main__':
@@ -91,15 +92,16 @@ if __name__ == '__main__':
     # https://docs.sqlalchemy.org/en/14/core/reflection.html#reflecting-all-tables-at-once
     pg_metadata = sqlalchemy.MetaData()
     pg_metadata.reflect(bind=pg_engine)
-    logging.info(pg_metadata.tables)
     pg_table = pg_metadata.tables['tweets']
+
+    # sentiment model
+    vader_analyzer = SentimentIntensityAnalyzer()
 
     # etl
     seen_object_ids = set()
     while True:
         extracted_tweets = extract(mongo_collection, seen_object_ids)
-        transformed_tweets = transform(extracted_tweets)
+        transformed_tweets = transform(extracted_tweets, vader_analyzer)
         load(transformed_tweets, pg_engine, pg_table)
 
-        time.sleep(30)
-    
+        time.sleep(5)
