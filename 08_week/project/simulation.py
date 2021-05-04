@@ -38,16 +38,26 @@ class SupermarketMap:
         )
         self.prepare_map()
 
+    def get_tile_by_location(self, col, row):
+        """returns pixel array for tile in column (col) and row (row)"""
+        col = int(col)
+        row = int(row)
+        return self.tiles[row * TILE_SIZE : (row+1) * TILE_SIZE, col * TILE_SIZE : (col+1) * TILE_SIZE]
+
     def get_tile(self, char):
         """returns the array for a given tile character"""
+
         if char == "#":
-            return self.tiles[0:32, 0:32]
+            return self.get_tile_by_location(0,0)
         elif char == "G":
-            return self.tiles[7 * 32 : 8 * 32, 3 * 32 : 4 * 32]
+            return self.get_tile_by_location(3,7)
         elif char == "C":
-            return self.tiles[2 * 32 : 3 * 32, 8 * 32 : 9 * 32]
-        else:
-            return self.tiles[32:64, 64:96]
+            return self.get_tile_by_location(8,2)
+        elif char == "B": # banana
+            return self.get_tile_by_location(4,0)
+        
+        return self.get_tile_by_location(2,1)
+
 
     def prepare_map(self):
         """prepares the entire image as a big numpy array"""
@@ -92,4 +102,4 @@ if __name__ == "__main__":
 
     cv2.destroyAllWindows()
 
-    market.write_image("supermarket.png")
+    #market.write_image("supermarket.png")
