@@ -8,6 +8,19 @@ smoothstep = lambda x: x * x * (3 - 2 * x)
 smootherstep = lambda x: x * x * x * (x * (x * 6 - 15) + 10)
 vector_transform = lambda x, src, dest: src + smootherstep(x)*(dest-src)
 
+def bezier_transform(x, src, dest, ctrl):
+    """
+    3-point Bezier Curve with De Casteljau’s algorithm.
+    For details see https://javascript.info/bezier-curve
+
+    x : scalar in range [0,1]
+    src, dest, ctrl : vector
+    """
+    line1 = vector_transform(x,src,ctrl)
+    line2 = vector_transform(x,ctrl,dest)
+    return vector_transform(x,line1,line2)
+
+
 """
 use parabola y = -(x*2-1)^2 + 1
 draw stuff: https://docs.opencv.org/master/dc/da5/tutorial_py_drawing_functions.html
@@ -26,7 +39,6 @@ class CustomerModel:
             if not choice == self.last_state:
                 self.last_state = choice
                 return choice, random
-
 
 class Ramp:
     """Ramps a float from 0 to 1 within n ticks."""
@@ -70,13 +82,20 @@ class TransformerLinear:
         return self.ramp.done()
 
 class CustomerView:
-    def __init__(self):
+    def __init__(self, supermarket_map):
+        self.supermarket_map = supermarket_map
+
         self.pos = np.array((10.,10.))
         dest = np.array((300.,300.))
-        t = partial(vector_transform, src=self.pos, dest=dest)
-        self.ramp = Ramp(n_ticks=30+int(random.random()*250), transformer=t)
+        ctrl = np.array((200.,50.))
+        transformer = partial(bezier_transform, src=self.pos, dest=dest, ctrl=ctrl)
+        n_ticks = 30+int(random.random()*150)
+        self.ramp = Ramp(n_ticks=n_ticks, transformer=transformer)
 
     def tick(self):
+        if self.ramp.done():
+            self.ramp.reset(100)
+            
         self.pos = self.ramp.tick()
     
     def draw(self, frame):
@@ -88,8 +107,8 @@ class CustomerView:
 
 
 class SupermarketConductor:
-    def __init__(self, num_of_customers):
-        self.artists = [ CustomerView() for i in range(num_of_customers) ]
+    def __init__(self, num_of_customers, supermarket_map):
+        self.artists = [ CustomerView(supermarket_map=supermarket_map) for i in range(num_of_customers) ]
 
     def draw(self,frame):
         for artist in self.artists:
@@ -172,7 +191,7 @@ if __name__ == "__main__":
 
     background, supermarket_map = prepare_supermarket_map()
 
-    composer = SupermarketConductor(30)
+    composer = SupermarketConductor(30, supermarket_map)
 
     while True:
         frame = background.copy()
