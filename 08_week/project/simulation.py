@@ -32,6 +32,7 @@ class Ramp:
             return True
         return False
 
+
 class Customer:
     def __init__(self):
         self.pos = 1.
@@ -49,6 +50,7 @@ class Customer:
         #if True:
         #    choice next state and duration
 
+
 class SupermarketConductor:
     def __init__(self, num_of_customers):
         self.artists = [ Customer() for i in range(num_of_customers) ]
@@ -57,7 +59,6 @@ class SupermarketConductor:
         for artist in self.artists:
             artist.tick()
             artist.draw(frame)
-    
 
 
 def draw_tile(tiles, image, tile_row, tile_col, x, y, tile_size = 32):
@@ -80,7 +81,8 @@ def draw_tile(tiles, image, tile_row, tile_col, x, y, tile_size = 32):
     tile_row = int(tile_row)
     tile_col = int(tile_col)
     tile = tiles[tile_row * tile_size : (tile_row+1) * tile_size, tile_col * tile_size : (tile_col+1) * tile_size]
-    image[y:y+tile_size , x:x+tile_size] = tile 
+    image[ y:y+tile_size , x:x+tile_size ] = tile 
+
 
 def prepare_supermarket_map(width=800, height=600):
     width = int(width)
@@ -122,6 +124,7 @@ def prepare_supermarket_map(width=800, height=600):
 
         x,y = map(round, supermarket_map[section]['pos'])
         supermarket_map[section]['pos'] = x,y
+
         tile_row, tile_col = supermarket_map[section]['tile']
         draw_tile(tiles=tiles, image=image, tile_row=tile_row, tile_col=tile_col, x=x, y=y)
 
