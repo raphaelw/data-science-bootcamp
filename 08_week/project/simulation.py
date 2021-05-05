@@ -1,6 +1,12 @@
 import math, cmath, random
+from functools import partial
 import numpy as np
 import cv2
+
+# Smoothstep functions https://en.wikipedia.org/wiki/Smoothstep
+smoothstep = lambda x: x * x * (3 - 2 * x)
+smootherstep = lambda x: x * x * x * (x * (x * 6 - 15) + 10)
+vector_transform = lambda x, src, dest: src + smootherstep(x)*(dest-src)
 
 """
 use parabola y = -(x*2-1)^2 + 1
@@ -9,43 +15,73 @@ transparency: https://gist.github.com/IAmSuyogJadhav/305bfd9a0605a4c096383408bee
 choice: https://stackoverflow.com/questions/40927221/how-to-choose-keys-from-a-python-dictionary-based-on-weighted-probability/40927437
 """
 
+class CustomerModel:
+    def __init__(self):
+        self.last_state = ''
+
+    def next_state(self):
+        """Returns tuple containing: next_state, duration"""
+        while True:
+            choice = random.choice(['drinks', 'fruit', 'spices', 'dairy'])
+            if not choice == self.last_state:
+                self.last_state = choice
+                return choice, random
+
+
 class Ramp:
     """Ramps a float from 0 to 1 within n ticks."""
-    def __init__(self):
-        self.value = 0.
-        self.step_size = 0.
+    def __init__(self, n_ticks=10, transformer=smoothstep):
+        self._transformer = transformer
+        self.reset(n_ticks)
 
     def reset(self, n_ticks):
-        self.value = 0.
-        self.step_size = 1./n_ticks
+        self._value = 0.
+        self._step_size = 1./n_ticks
 
     def tick(self):
-        self.value += self.step_size
-        self.value = min(1.,self.value)
-        return self.value
+        self._value += self._step_size
+        self._value = min(1.,self._value)
+        return self.value()
     
     def value(self):
-        return self.value
+        return self._transformer(self._value)
 
     def done(self):
-        if float(self.value) == float(1):
+        if float(self._value) == 1:
             return True
         return False
 
+class TransformerLinear:
+    def __init__(self, src, dest, n_ticks):
+        """
+        src, dest : vector
+        n_ticks : int
+        """
+        self.ramp = Ramp(n_ticks=n_ticks)
+        self._s = 0.
+
+    def tick(self):
+        self._s = self.ramp.tick()
+
+    def pos(self):
+        return src + self.ramp.value()*(dest-src)
+
+    def done(self):
+        return self.ramp.done()
 
 class CustomerView:
     def __init__(self):
-        self.pos = 1.
-        self._m = cmath.exp(1.j * 0.1 * random.random())
+        self.pos = np.array((10.,10.))
+        dest = np.array((300.,300.))
+        t = partial(vector_transform, src=self.pos, dest=dest)
+        self.ramp = Ramp(n_ticks=30+int(random.random()*250), transformer=t)
 
     def tick(self):
-        self.pos *= self._m
-        self.pos /= abs(self.pos) # stabilize
+        self.pos = self.ramp.tick()
     
     def draw(self, frame):
-        cpos = self.pos * 60. + (100+100j)
-        cpos = (round(cpos.real), round(cpos.imag))
-        cv2.circle(frame, cpos, 4, (0,0,255), -1)
+        pos = tuple(self.pos.astype(int))
+        cv2.circle(frame, pos, 4, (0,0,255), -1)
 
         #if True:
         #    choice next state and duration
