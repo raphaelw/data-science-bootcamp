@@ -30,15 +30,22 @@ choice: https://stackoverflow.com/questions/40927221/how-to-choose-keys-from-a-p
 
 class CustomerModel:
     def __init__(self):
-        self.last_state = ''
+        self.state = 'entrance'
+        self.duration = random.random()*5
+
+    def get_state(self):
+        """Returns tuple containing: state, duration"""
+        return self.state, self.duration
 
     def next_state(self):
-        """Returns tuple containing: next_state, duration"""
+        """ Transition to next state.
+        Returns tuple containing: state, duration"""
         while True:
             choice = random.choice(['drinks', 'fruit', 'spices', 'dairy'])
-            if not choice == self.last_state:
-                self.last_state = choice
-                return choice, random
+            if not choice == self.state:
+                self.state = choice
+                self.duration = random.random()*5
+                return self.get_state()
 
 class Ramp:
     """Ramps a float from 0 to 1 within n ticks."""
@@ -63,24 +70,6 @@ class Ramp:
             return True
         return False
 
-class TransformerLinear:
-    def __init__(self, src, dest, n_ticks):
-        """
-        src, dest : vector
-        n_ticks : int
-        """
-        self.ramp = Ramp(n_ticks=n_ticks)
-        self._s = 0.
-
-    def tick(self):
-        self._s = self.ramp.tick()
-
-    def pos(self):
-        return src + self.ramp.value()*(dest-src)
-
-    def done(self):
-        return self.ramp.done()
-
 class CustomerView:
     def __init__(self, supermarket_map):
         self.supermarket_map = supermarket_map
@@ -92,6 +81,9 @@ class CustomerView:
         n_ticks = 30+int(random.random()*150)
         self.ramp = Ramp(n_ticks=n_ticks, transformer=transformer)
 
+    def _next_transition(self):
+        pass
+    
     def tick(self):
         if self.ramp.done():
             self.ramp.reset(100)
@@ -147,26 +139,32 @@ def prepare_supermarket_map(width=800, height=600):
         ,'dairy': {
              'pos':(0.2*width, 0.5*height) # x,y
             ,'tile':(7,11) # row, col
+            ,'type':'section'
         }
         ,'drinks': {
              'pos':(0.4*width, 0.5*height)
             ,'tile':(6,13)
+            ,'type':'section'
         }
         ,'fruit': {
              'pos':(0.6*width, 0.5*height)
             ,'tile':(7,4)
+            ,'type':'section'
         }
         ,'spices': {
              'pos':(0.8*width, 0.5*height)
             ,'tile':(2,3)
+            ,'type':'section'
         }
         ,'entrance': {
              'pos':(0.5*width, 0.1*height)
             ,'tile':(1,1)
+            ,'type':'other'
         }
         ,'checkout': {
              'pos':(0.5*width, 0.9*height)
             ,'tile':(2,8)
+            ,'type':'other'
         }
     }
 
