@@ -33,7 +33,7 @@ class Ramp:
         return False
 
 
-class Customer:
+class CustomerView:
     def __init__(self):
         self.pos = 1.
         self._m = cmath.exp(1.j * 0.1 * random.random())
@@ -53,7 +53,7 @@ class Customer:
 
 class SupermarketConductor:
     def __init__(self, num_of_customers):
-        self.artists = [ Customer() for i in range(num_of_customers) ]
+        self.artists = [ CustomerView() for i in range(num_of_customers) ]
 
     def draw(self,frame):
         for artist in self.artists:
@@ -95,7 +95,7 @@ def prepare_supermarket_map(width=800, height=600):
         }
         ,'drinks': {
              'pos':(0.4*width, 0.5*height)
-            ,'tile':(0,5)
+            ,'tile':(6,13)
         }
         ,'fruit': {
              'pos':(0.6*width, 0.5*height)
