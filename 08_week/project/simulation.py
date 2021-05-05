@@ -1,4 +1,4 @@
-import math, cmath
+import math, cmath, random
 import numpy as np
 import cv2
 
@@ -53,18 +53,27 @@ class Ramp:
 class Customer:
     def __init__(self):
         self.pos = 1.
-        self._m = cmath.exp(1.j * 0.1)
+        self._m = cmath.exp(1.j * 0.1 * random.random())
 
     def tick(self):
-        pass
-    
-    def draw(self, frame):
         self.pos *= self._m
         self.pos /= abs(self.pos) # stabilize
-
+    
+    def draw(self, frame):
         cpos = self.pos * 60. + (100+100j)
         cpos = (round(cpos.real), round(cpos.imag))
         cv2.circle(frame, cpos, 4, (0,0,255), -1)
+
+class SupermarketConductor:
+    def __init__(self, num_of_customers):
+        self.artists = [ Customer() for i in range(num_of_customers) ]
+    def tick(self):
+        for artist in self.artists:
+            artist.tick()
+    def draw(self,frame):
+        for artist in self.artists:
+            artist.draw(frame)
+    
 
 class SupermarketMap:
     """Visualizes the supermarket background"""
@@ -134,13 +143,12 @@ if __name__ == "__main__":
     background = np.zeros((700, 1000, 3), np.uint8)
     tiles = cv2.imread("tiles.png")
 
-    customer = Customer()
-    market = SupermarketMap(MARKET, tiles)
+    composer = SupermarketConductor(30)
 
     while True:
         frame = background.copy()
-        #market.draw(frame)
-        customer.draw(frame)
+        composer.tick()
+        composer.draw(frame)
 
         cv2.imshow("frame", frame)
 
