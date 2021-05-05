@@ -5,27 +5,9 @@ import cv2
 """
 use parabola y = -(x*2-1)^2 + 1
 draw stuff: https://docs.opencv.org/master/dc/da5/tutorial_py_drawing_functions.html
+transparency: https://gist.github.com/IAmSuyogJadhav/305bfd9a0605a4c096383408bee7fd5c
 choice: https://stackoverflow.com/questions/40927221/how-to-choose-keys-from-a-python-dictionary-based-on-weighted-probability/40927437
 """
-
-TILE_SIZE = 32
-OFS = 50
-FPS = 25
-
-MARKET = """
-##################
-##..............##
-##..##..##..##..##
-##..##..##..##..##
-##..##..##..##..##
-##..##..##..##..##
-##..##..##..##..##
-##...............#
-##..C#..C#..C#...#
-##..##..##..##...#
-##...............#
-##############GG##
-""".strip()
 
 class Ramp:
     """Ramps a float from 0 to 1 within n ticks."""
@@ -64,90 +46,97 @@ class Customer:
         cpos = (round(cpos.real), round(cpos.imag))
         cv2.circle(frame, cpos, 4, (0,0,255), -1)
 
+        #if True:
+        #    choice next state and duration
+
 class SupermarketConductor:
     def __init__(self, num_of_customers):
         self.artists = [ Customer() for i in range(num_of_customers) ]
-    def tick(self):
-        for artist in self.artists:
-            artist.tick()
+
     def draw(self,frame):
         for artist in self.artists:
+            artist.tick()
             artist.draw(frame)
     
 
-class SupermarketMap:
-    """Visualizes the supermarket background"""
 
-    def __init__(self, layout, tiles):
-        """
-        layout : a string with each character representing a tile
-        tile   : a numpy array containing the tile image
-        """
-        self.tiles = tiles
-        self.contents = [list(row) for row in layout.split("\n")]
-        self.xsize = len(self.contents[0])
-        self.ysize = len(self.contents)
-        self.image = np.zeros(
-            (self.ysize * TILE_SIZE, self.xsize * TILE_SIZE, 3), dtype=np.uint8
-        )
-        self.prepare_map()
+def draw_tile(tiles, image, tile_row, tile_col, x, y, tile_size = 32):
+    """
+    Draw tile on an image.
 
-    def get_tile_by_location(self, col, row):
-        """returns pixel array for tile in column (col) and row (row)"""
-        col = int(col)
-        row = int(row)
-        return self.tiles[row * TILE_SIZE : (row+1) * TILE_SIZE, col * TILE_SIZE : (col+1) * TILE_SIZE]
+    Parameters
+    ----------
+    tiles : 2D array
+        tiles with size of tile_size
+    image : 2D array
+        tile is drawn on the image
+    tile_row, tile_col : int
+        select tile to draw
+    x, y : int
+        tile location on image
+    """
+    x = round(x-(tile_size/2))
+    y = round(y-(tile_size/2))
+    tile_row = int(tile_row)
+    tile_col = int(tile_col)
+    tile = tiles[tile_row * tile_size : (tile_row+1) * tile_size, tile_col * tile_size : (tile_col+1) * tile_size]
+    image[y:y+tile_size , x:x+tile_size] = tile 
 
-    def get_tile(self, char):
-        """returns the array for a given tile character"""
+def prepare_supermarket_map(width=800, height=600):
+    width = int(width)
+    height = int(height)
+    supermarket_map = {
+         '_shape': {'width':width, 'height':height}
+        ,'dairy': {
+             'pos':(0.2*width, 0.5*height) # x,y
+            ,'tile':(7,11) # row, col
+        }
+        ,'drinks': {
+             'pos':(0.4*width, 0.5*height)
+            ,'tile':(0,5)
+        }
+        ,'fruit': {
+             'pos':(0.6*width, 0.5*height)
+            ,'tile':(7,4)
+        }
+        ,'spices': {
+             'pos':(0.8*width, 0.5*height)
+            ,'tile':(2,3)
+        }
+        ,'entrance': {
+             'pos':(0.5*width, 0.1*height)
+            ,'tile':(1,1)
+        }
+        ,'checkout': {
+             'pos':(0.5*width, 0.9*height)
+            ,'tile':(2,8)
+        }
+    }
 
-        if char == "#":
-            return self.get_tile_by_location(0,0)
-        elif char == "G":
-            return self.get_tile_by_location(3,7)
-        elif char == "C":
-            return self.get_tile_by_location(8,2)
-        elif char == "B": # banana
-            return self.get_tile_by_location(4,0)
-        
-        return self.get_tile_by_location(2,1)
+    image = np.zeros((height, width, 3), np.uint8)
+    tiles = cv2.imread("tiles.png")
 
+    for section in supermarket_map:
+        if section.startswith('_'):
+            continue
 
-    def prepare_map(self):
-        """prepares the entire image as a big numpy array"""
-        for y, row in enumerate(self.contents):
-            for x, tile in enumerate(row):
-                bm = self.get_tile(tile)
-                self.image[
-                    y * TILE_SIZE : (y + 1) * TILE_SIZE,
-                    x * TILE_SIZE : (x + 1) * TILE_SIZE,
-                ] = bm
+        x,y = map(round, supermarket_map[section]['pos'])
+        supermarket_map[section]['pos'] = x,y
+        tile_row, tile_col = supermarket_map[section]['tile']
+        draw_tile(tiles=tiles, image=image, tile_row=tile_row, tile_col=tile_col, x=x, y=y)
 
-    def draw(self, frame, offset=OFS):
-        """
-        draws the image into a frame
-        offset pixels from the top left corner
-        """
-        frame[
-            OFS : OFS + self.image.shape[0], OFS : OFS + self.image.shape[1]
-        ] = self.image
-
-    def write_image(self, filename):
-        """writes the image into a file"""
-        cv2.imwrite(filename, self.image)
-
+    return image, supermarket_map
 
 if __name__ == "__main__":
-    frame_interval_ms = int(1000./FPS)
+    fps = 25
+    frame_interval_ms = int(1000./fps)
 
-    background = np.zeros((700, 1000, 3), np.uint8)
-    tiles = cv2.imread("tiles.png")
+    background, supermarket_map = prepare_supermarket_map()
 
     composer = SupermarketConductor(30)
 
     while True:
         frame = background.copy()
-        composer.tick()
         composer.draw(frame)
 
         cv2.imshow("frame", frame)
