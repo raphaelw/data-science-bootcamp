@@ -6,9 +6,9 @@ import numpy as np
 class CustomerModel:
     """Cutomer dummy model. Completely random transitions."""
     def __init__(self, customer_id=1):
-        with open('transition_matrix.json', 'rb') as f:
+        with open('data/transition_matrix.json', 'rb') as f:
             self._transition_matrix = json.load(f)
-        with open('mean_durations.json', 'rb') as f:
+        with open('data/mean_durations.json', 'rb') as f:
             self._mean_durations = json.load(f)
 
         self.state = 'entrance'
