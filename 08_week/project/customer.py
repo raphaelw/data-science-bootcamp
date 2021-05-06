@@ -5,6 +5,8 @@ class CustomerModel:
     def __init__(self, customer_id=1):
         self.state = 'entrance'
         self.duration = random.random()*5
+        self.duration = customer_id*0.5
+        self.duration = 1.
 
     def get_state(self):
         """Returns tuple containing: state, duration"""

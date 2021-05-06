@@ -96,9 +96,9 @@ def position(supermarket, section):
     return np.array( supermarket[section]['pos'] , dtype=float )
 
 class CustomerView:
-    def __init__(self, supermarket_map):
+    def __init__(self, supermarket_map, customer_id):
         self._map = supermarket_map
-        self._model = CustomerModel()
+        self._model = CustomerModel(customer_id=customer_id)
         
         self._transformer_queue = queue.Queue()
         self._transformer = None
@@ -138,7 +138,7 @@ class CustomerView:
         section, duration = self._model.get_state()
         section_info = self._map[section]
 
-        n_ticks = round((duration+1) * 60.)
+        n_ticks = round((duration+1) * 20.)
         transformer = TransformerWiggleWaggle(center_pos=np.array(section_info['pos'], dtype=float)
                                              , deviation=120
                                              , n_ticks=n_ticks
@@ -173,7 +173,7 @@ class CustomerView:
 
 class SupermarketConductor:
     def __init__(self, num_of_customers, supermarket_map):
-        self.artists = [ CustomerView(supermarket_map=supermarket_map) for i in range(num_of_customers) ]
+        self.artists = [ CustomerView(supermarket_map=supermarket_map, customer_id=i+1) for i in range(num_of_customers) ]
 
     def draw(self,frame):
         for artist in self.artists:
