@@ -1,7 +1,14 @@
 import math, cmath, random
+import queue
 from functools import partial
 import numpy as np
 import cv2
+
+""" NOTES
+draw stuff: https://docs.opencv.org/master/dc/da5/tutorial_py_drawing_functions.html
+transparency: https://gist.github.com/IAmSuyogJadhav/305bfd9a0605a4c096383408bee7fd5c
+choice: https://stackoverflow.com/questions/40927221/how-to-choose-keys-from-a-python-dictionary-based-on-weighted-probability/40927437
+"""
 
 # Smoothstep functions https://en.wikipedia.org/wiki/Smoothstep
 smoothstep = lambda x: x * x * (3 - 2 * x)
@@ -19,14 +26,7 @@ def bezier_transform(x, src, dest, ctrl):
     line1 = vector_transform(x,src,ctrl)
     line2 = vector_transform(x,ctrl,dest)
     return vector_transform(x,line1,line2)
-
-
-"""
-use parabola y = -(x*2-1)^2 + 1
-draw stuff: https://docs.opencv.org/master/dc/da5/tutorial_py_drawing_functions.html
-transparency: https://gist.github.com/IAmSuyogJadhav/305bfd9a0605a4c096383408bee7fd5c
-choice: https://stackoverflow.com/questions/40927221/how-to-choose-keys-from-a-python-dictionary-based-on-weighted-probability/40927437
-"""
+    
 
 class CustomerModel:
     def __init__(self):
@@ -72,32 +72,66 @@ class Ramp:
             return True
         return False
 
+def position(supermarket, section):
+    return np.array( supermarket[section]['pos'] , dtype=float )
+
 class CustomerView:
     def __init__(self, supermarket_map):
-        self.supermarket_map = supermarket_map
+        self._map = supermarket_map
+        self._model = CustomerModel()
+        
+        self._transformer_queue = queue.Queue()
+        self._transformer = None
 
-        self.pos = np.array((150.,300.))
-        dest = np.array((300.,300.))
-        ctrl = np.array((225.,200.))
-        transformer = partial(bezier_transform, src=self.pos, dest=dest, ctrl=ctrl)
-        n_ticks = 30+int(random.random()*150)
-        self.ramp = Ramp(n_ticks=n_ticks, transformer=transformer)
+        section, self._duration = self._model.get_state()
+        self._pos = position(self._map, section)
+
+        self._next_transition()
+
+        # self.pos = np.array((150.,300.))
+        # dest = np.array((300.,300.))
+        # ctrl = np.array((225.,200.))
+        # transformer = partial(bezier_transform, src=self.pos, dest=dest, ctrl=ctrl)
+        # n_ticks = 30+int(random.random()*150)
+        # self.ramp = Ramp(n_ticks=n_ticks, transformer=transformer)
 
     def _next_transition(self):
-        pass
+        last_section = self._model.get_state()[0]
+
+        # proceed model to next state
+        self._model.next_state()
+        section, duration = self._model.get_state()
+        dest = position(self._map, section)
+
+        # put transformations (aka animations) into the queue
+        t = partial(vector_transform, src=self._pos, dest=dest)
+        transformer = Ramp(n_ticks=50, transformer=t)
+        self._transformer_queue.put(transformer) # TODO
+
 
     def tick(self):
-        if self.ramp.done():
-            self.ramp.reset()
-            
-        self.pos = self.ramp.tick()
+        check_queue = False
+
+        if self._transformer is not None:
+            if self._transformer.done():
+                self._transformer = None
+            else:
+                self._transformer.tick()
+        
+        if self._transformer is None:
+            if self._transformer_queue.empty():
+                # all transformations done
+                self._next_transition()
+            else:
+                # get next queue element
+                self._transformer = self._transformer_queue.get(block=False)
     
     def draw(self, frame):
-        pos = tuple(self.pos.astype(int))
-        cv2.circle(frame, pos, 4, (0,0,255), -1)
+        if self._transformer is not None:
+            self._pos = self._transformer.position()
 
-        #if True:
-        #    choice next state and duration
+        pos = tuple(self._pos.astype(int))
+        cv2.circle(frame, pos, 4, (0,0,255), -1)
 
 
 class SupermarketConductor:
@@ -170,7 +204,8 @@ def prepare_supermarket_map(width=800, height=600):
         }
     }
 
-    image = np.zeros((height, width, 3), np.uint8)
+    background = np.zeros((height, width, 3), np.uint8)
+    image = background.copy()
     tiles = cv2.imread("tiles.png")
 
     for section in supermarket_map:
@@ -182,6 +217,10 @@ def prepare_supermarket_map(width=800, height=600):
 
         tile_row, tile_col = supermarket_map[section]['tile']
         draw_tile(tiles=tiles, image=image, tile_row=tile_row, tile_col=tile_col, x=x, y=y)
+
+    # alpha / transparency
+    alpha = 0.5
+    image = cv2.addWeighted(image, alpha, background, 1-alpha, 0)
 
     return image, supermarket_map
 
