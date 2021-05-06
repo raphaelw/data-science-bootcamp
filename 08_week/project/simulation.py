@@ -48,21 +48,23 @@ class CustomerModel:
                 return self.get_state()
 
 class Ramp:
-    """Ramps a float from 0 to 1 within n ticks."""
+    """Ramps a float from 0 to 1 within n ticks and applies a transform to it."""
     def __init__(self, n_ticks=10, transformer=smoothstep):
+        self.n_ticks = int(n_ticks)
         self._transformer = transformer
         self.reset(n_ticks)
 
-    def reset(self, n_ticks):
+    def reset(self, n_ticks=None):
         self._value = 0.
+        n_ticks = self.n_ticks if n_ticks == None else n_ticks
         self._step_size = 1./n_ticks
 
     def tick(self):
         self._value += self._step_size
         self._value = min(1.,self._value)
-        return self.value()
+        return self.position()
     
-    def value(self):
+    def position(self):
         return self._transformer(self._value)
 
     def done(self):
@@ -74,19 +76,19 @@ class CustomerView:
     def __init__(self, supermarket_map):
         self.supermarket_map = supermarket_map
 
-        self.pos = np.array((10.,10.))
+        self.pos = np.array((150.,300.))
         dest = np.array((300.,300.))
-        ctrl = np.array((200.,50.))
+        ctrl = np.array((225.,200.))
         transformer = partial(bezier_transform, src=self.pos, dest=dest, ctrl=ctrl)
         n_ticks = 30+int(random.random()*150)
         self.ramp = Ramp(n_ticks=n_ticks, transformer=transformer)
 
     def _next_transition(self):
         pass
-    
+
     def tick(self):
         if self.ramp.done():
-            self.ramp.reset(100)
+            self.ramp.reset()
             
         self.pos = self.ramp.tick()
     
@@ -189,7 +191,7 @@ if __name__ == "__main__":
 
     background, supermarket_map = prepare_supermarket_map()
 
-    composer = SupermarketConductor(30, supermarket_map)
+    composer = SupermarketConductor(20, supermarket_map)
 
     while True:
         frame = background.copy()
