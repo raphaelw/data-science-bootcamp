@@ -105,6 +105,7 @@ class CustomerView:
 
         section, self._duration = self._model.get_state()
         self._pos = position(self._map, section)
+        self._enqueue_wait_animation()
 
     def _next_transition(self):
         last_section = self._model.get_state()[0]
@@ -112,6 +113,8 @@ class CustomerView:
         # proceed model to next state
         self._model.next_state()
         section, duration = self._model.get_state()
+        if section is None:
+            return
 
         dest = position(self._map, section)
         src = self._pos
@@ -128,7 +131,13 @@ class CustomerView:
         transformer = Ramp(n_ticks=30, transformer=t)
         self._transformer_queue.put(transformer)
 
+        self._enqueue_wait_animation()
+
+    def _enqueue_wait_animation(self):
         # spend time in state
+        section, duration = self._model.get_state()
+        section_info = self._map[section]
+
         n_ticks = round((duration+1) * 60.)
         transformer = TransformerWiggleWaggle(center_pos=np.array(section_info['pos'], dtype=float)
                                              , deviation=120
@@ -152,6 +161,9 @@ class CustomerView:
                 self._transformer = self._transformer_queue.get(block=False)
     
     def draw(self, frame):
+        if self._model.done():
+            return 
+            
         if self._transformer is not None:
             self._pos = self._transformer.position()
 
