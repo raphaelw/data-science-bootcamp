@@ -38,7 +38,7 @@ class CustomerModel:
         
         # exponential distribution sampling for time spent in a section
         if self.state == 'checkout':
-            self.duration = 1.5
+            self.duration = 3.
         else:
             mean = self._mean_durations[self.state]
             lambd = 1/mean
