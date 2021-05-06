@@ -62,6 +62,36 @@ class Ramp:
             return True
         return False
 
+class TransformerWiggleWaggle:
+    def __init__(self, center_pos=(0,0), deviation=1, n_ticks=100, interval_ticks=20):
+        self._center_pos = np.array(center_pos, dtype=float)
+        self._deviation = float(deviation)
+        self._ramp = Ramp(n_ticks=int(n_ticks))
+        self._interval_ticks = int(interval_ticks)
+        self._tick_counter = 0
+
+        self._noise = np.zeros_like(self._center_pos)
+        self._noise_dest = np.zeros_like(self._noise)
+
+    def tick(self):
+        self._ramp.tick()
+
+        new_noise = self._tick_counter == 0
+        self._tick_counter = (self._tick_counter+1) % self._interval_ticks
+
+        if new_noise:
+            self._noise_dest = (2*np.random.random(2)-1) * self._deviation
+
+        # Exponential Moving Average : y[n] = (1-alpha)*x[n] + alpha*y[n-1]
+        alpha = 0.9
+        self._noise = (1.-alpha)*self._noise_dest + alpha*self._noise
+
+    def position(self):
+        return self._center_pos + self._noise
+
+    def done(self):
+        return self._ramp.done()
+
 def position(supermarket, section):
     return np.array( supermarket[section]['pos'] , dtype=float )
 
@@ -76,15 +106,6 @@ class CustomerView:
         section, self._duration = self._model.get_state()
         self._pos = position(self._map, section)
 
-        self._next_transition()
-
-        # self.pos = np.array((150.,300.))
-        # dest = np.array((300.,300.))
-        # ctrl = np.array((225.,200.))
-        # transformer = partial(bezier_transform, src=self.pos, dest=dest, ctrl=ctrl)
-        # n_ticks = 30+int(random.random()*150)
-        # self.ramp = Ramp(n_ticks=n_ticks, transformer=transformer)
-
     def _next_transition(self):
         last_section = self._model.get_state()[0]
 
@@ -98,8 +119,6 @@ class CustomerView:
         section_info = self._map[section]
 
         # put transformations (aka animations) into the queue
-
-
         t = partial(vector_transform, src=self._pos, dest=dest)
         if last_section_info['type'] == 'section' and section_info['type'] == 'section':
             # do fancy transition
@@ -107,12 +126,16 @@ class CustomerView:
             t = get_fancy_transformer(src=self._pos, src_ideal=last_ideal_pos, dest=dest, scale_vertical_offset=1.5)
 
         transformer = Ramp(n_ticks=30, transformer=t)
-        self._transformer_queue.put(transformer) # TODO
+        self._transformer_queue.put(transformer)
 
+        # spend time in state
+        transformer = TransformerWiggleWaggle(center_pos=np.array(section_info['pos'], dtype=float)
+                                             , deviation=50
+                                             , n_ticks=200
+                                             , interval_ticks=5)
+        self._transformer_queue.put(transformer)
 
     def tick(self):
-        check_queue = False
-
         if self._transformer is not None:
             if self._transformer.done():
                 self._transformer = None
