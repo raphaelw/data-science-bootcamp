@@ -12,8 +12,7 @@ class CustomerModel:
             self._mean_durations = json.load(f)
 
         self.state = 'entrance'
-        self.duration = 1.
-        self.duration = customer_id*1.
+        self.duration = 0.5 * customer_id
 
     def get_state(self):
         """Returns tuple containing: state, duration"""
@@ -36,10 +35,10 @@ class CustomerModel:
                                     , weights=probability_mass_function.values()
                                     , k=1)[0]
         
-        # exponential distribution sampling for time spent in a section
         if self.state == 'checkout':
             self.duration = 3.
         else:
+            # exponential distribution sampling for time spent in a section
             mean = self._mean_durations[self.state]
             lambd = 1/mean
             self.duration = random.expovariate(lambd=lambd)

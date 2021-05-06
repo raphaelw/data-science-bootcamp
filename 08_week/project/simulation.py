@@ -267,7 +267,7 @@ if __name__ == "__main__":
 
     background, supermarket_map = prepare_supermarket_map()
 
-    composer = SupermarketConductor(20, supermarket_map)
+    composer = SupermarketConductor(200, supermarket_map)
 
     while True:
         frame = background.copy()
