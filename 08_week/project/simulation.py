@@ -4,6 +4,8 @@ from functools import partial
 import numpy as np
 import cv2
 
+from customer import CustomerModel
+
 """ NOTES
 draw stuff: https://docs.opencv.org/master/dc/da5/tutorial_py_drawing_functions.html
 transparency: https://gist.github.com/IAmSuyogJadhav/305bfd9a0605a4c096383408bee7fd5c
@@ -26,26 +28,6 @@ def bezier_transform(x, src, dest, ctrl):
     line1 = vector_transform(x,src,ctrl)
     line2 = vector_transform(x,ctrl,dest)
     return vector_transform(x,line1,line2)
-    
-
-class CustomerModel:
-    def __init__(self):
-        self.state = 'entrance'
-        self.duration = random.random()*5
-
-    def get_state(self):
-        """Returns tuple containing: state, duration"""
-        return self.state, self.duration
-
-    def next_state(self):
-        """ Transition to next state.
-        Returns tuple containing: state, duration"""
-        while True:
-            choice = random.choice(['drinks', 'fruit', 'spices', 'dairy'])
-            if not choice == self.state:
-                self.state = choice
-                self.duration = random.random()*5
-                return self.get_state()
 
 class Ramp:
     """Ramps a float from 0 to 1 within n ticks and applies a transform to it."""
@@ -101,10 +83,24 @@ class CustomerView:
         # proceed model to next state
         self._model.next_state()
         section, duration = self._model.get_state()
+
         dest = position(self._map, section)
+        src = self._pos
+        last_section_info = self._map[last_section]
+        section_info = self._map[section]
 
         # put transformations (aka animations) into the queue
+
+
         t = partial(vector_transform, src=self._pos, dest=dest)
+        if last_section_info['type'] == 'section' and section_info['type'] == 'section':
+            # do fancy transition
+            last_ideal_pos = np.array(last_section_info['pos'], dtype=float)
+            bezier_ctrl_point = last_ideal_pos + 0.5*(dest-last_ideal_pos)
+            bezier_ctrl_point[1] += np.linalg.norm(dest-bezier_ctrl_point)
+
+            t = partial(bezier_transform, src=self._pos, dest=dest, ctrl=bezier_ctrl_point)
+
         transformer = Ramp(n_ticks=50, transformer=t)
         self._transformer_queue.put(transformer) # TODO
 
@@ -131,7 +127,7 @@ class CustomerView:
             self._pos = self._transformer.position()
 
         pos = tuple(self._pos.astype(int))
-        cv2.circle(frame, pos, 4, (0,0,255), -1)
+        cv2.circle(frame, pos, 4, (255,255,255), -1)
 
 
 class SupermarketConductor:
@@ -167,7 +163,7 @@ def draw_tile(tiles, image, tile_row, tile_col, x, y, tile_size = 32):
     image[ y:y+tile_size , x:x+tile_size ] = tile 
 
 
-def prepare_supermarket_map(width=800, height=600):
+def prepare_supermarket_map(width=1200, height=700):
     width = int(width)
     height = int(height)
     supermarket_map = {
@@ -230,7 +226,7 @@ if __name__ == "__main__":
 
     background, supermarket_map = prepare_supermarket_map()
 
-    composer = SupermarketConductor(20, supermarket_map)
+    composer = SupermarketConductor(2, supermarket_map)
 
     while True:
         frame = background.copy()
