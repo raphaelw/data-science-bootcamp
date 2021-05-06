@@ -29,6 +29,14 @@ def bezier_transform(x, src, dest, ctrl):
     line2 = vector_transform(x,ctrl,dest)
     return vector_transform(x,line1,line2)
 
+def get_fancy_transformer(src, src_ideal, dest, scale_vertical_offset=1.2):
+    """Helper function for bezier based transform. Returns a function."""
+    ctrl = src_ideal + 0.5*(dest-src_ideal)
+    scale_vertical_offset *= -1.*np.sign(dest[0]-ctrl[0])
+    ctrl[1] += np.linalg.norm(dest-ctrl)*scale_vertical_offset
+
+    return partial(bezier_transform, src=src, dest=dest, ctrl=ctrl)
+
 class Ramp:
     """Ramps a float from 0 to 1 within n ticks and applies a transform to it."""
     def __init__(self, n_ticks=10, transformer=smoothstep):
@@ -96,12 +104,9 @@ class CustomerView:
         if last_section_info['type'] == 'section' and section_info['type'] == 'section':
             # do fancy transition
             last_ideal_pos = np.array(last_section_info['pos'], dtype=float)
-            bezier_ctrl_point = last_ideal_pos + 0.5*(dest-last_ideal_pos)
-            bezier_ctrl_point[1] += np.linalg.norm(dest-bezier_ctrl_point)
+            t = get_fancy_transformer(src=self._pos, src_ideal=last_ideal_pos, dest=dest, scale_vertical_offset=1.5)
 
-            t = partial(bezier_transform, src=self._pos, dest=dest, ctrl=bezier_ctrl_point)
-
-        transformer = Ramp(n_ticks=50, transformer=t)
+        transformer = Ramp(n_ticks=30, transformer=t)
         self._transformer_queue.put(transformer) # TODO
 
 
@@ -163,7 +168,7 @@ def draw_tile(tiles, image, tile_row, tile_col, x, y, tile_size = 32):
     image[ y:y+tile_size , x:x+tile_size ] = tile 
 
 
-def prepare_supermarket_map(width=1200, height=700):
+def prepare_supermarket_map(width=1000, height=800):
     width = int(width)
     height = int(height)
     supermarket_map = {
@@ -226,7 +231,7 @@ if __name__ == "__main__":
 
     background, supermarket_map = prepare_supermarket_map()
 
-    composer = SupermarketConductor(2, supermarket_map)
+    composer = SupermarketConductor(30, supermarket_map)
 
     while True:
         frame = background.copy()
