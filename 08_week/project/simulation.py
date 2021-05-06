@@ -83,7 +83,7 @@ class TransformerWiggleWaggle:
             self._noise_dest = (2*np.random.random(2)-1) * self._deviation
 
         # Exponential Moving Average : y[n] = (1-alpha)*x[n] + alpha*y[n-1]
-        alpha = 0.9
+        alpha = 0.95
         self._noise = (1.-alpha)*self._noise_dest + alpha*self._noise
 
     def position(self):
@@ -129,10 +129,11 @@ class CustomerView:
         self._transformer_queue.put(transformer)
 
         # spend time in state
+        n_ticks = round((duration+1) * 60.)
         transformer = TransformerWiggleWaggle(center_pos=np.array(section_info['pos'], dtype=float)
-                                             , deviation=50
-                                             , n_ticks=200
-                                             , interval_ticks=5)
+                                             , deviation=120
+                                             , n_ticks=n_ticks
+                                             , interval_ticks=3)
         self._transformer_queue.put(transformer)
 
     def tick(self):
@@ -155,7 +156,7 @@ class CustomerView:
             self._pos = self._transformer.position()
 
         pos = tuple(self._pos.astype(int))
-        cv2.circle(frame, pos, 4, (255,255,255), -1)
+        cv2.circle(frame, pos, 2, (255,255,255), -1)
 
 
 class SupermarketConductor:
@@ -254,7 +255,7 @@ if __name__ == "__main__":
 
     background, supermarket_map = prepare_supermarket_map()
 
-    composer = SupermarketConductor(30, supermarket_map)
+    composer = SupermarketConductor(20, supermarket_map)
 
     while True:
         frame = background.copy()

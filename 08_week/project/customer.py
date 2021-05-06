@@ -14,7 +14,7 @@ class CustomerModel:
         """ Transition to next state.
         Returns tuple containing: state, duration"""
         while True:
-            choice = random.choice(['drinks', 'fruit', 'spices', 'dairy'])
+            choice = random.choice(['drinks', 'fruit', 'spices', 'dairy', 'checkout'])
             if not choice == self.state:
                 self.state = choice
                 self.duration = random.random()*5
