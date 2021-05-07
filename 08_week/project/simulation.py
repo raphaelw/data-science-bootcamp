@@ -129,7 +129,7 @@ class CustomerView:
             last_ideal_pos = np.array(last_section_info['pos'], dtype=float)
             t = get_fancy_transformer(src=self._pos, src_ideal=last_ideal_pos, dest=dest, scale_vertical_offset=1.1)
 
-        transformer = Ramp(n_ticks=1.5*self._fps, transformer=t)
+        transformer = Ramp(n_ticks=2.5*self._fps, transformer=t)
         self._transformer_queue.put(transformer)
 
         self._enqueue_wait_animation()
