@@ -31,7 +31,7 @@ class CustomerModelDummy:
         return self.state is None
 
 class CustomerModel:
-    """Cutomer model based on MCMC. Completely random transitions."""
+    """Cutomer model based on MCMC."""
     def __init__(self, customer_id=1):
         with open('data/transition_matrix.json', 'rb') as f:
             self._transition_matrix = json.load(f)
@@ -46,7 +46,7 @@ class CustomerModel:
         return self.state, self.duration
 
     def next_state(self):
-        """ Transition to next state.
+        """Transition to next state.
         Returns tuple containing: state, duration"""
         if self.state == 'checkout':
             self.state = None
@@ -87,7 +87,7 @@ class CustomerModelRandom:
         return self.state, self.duration
 
     def next_state(self):
-        """ Transition to next state.
+        """Transition to next state.
         Returns tuple containing: state, duration"""
         if self.state == 'checkout':
             self.state = None
