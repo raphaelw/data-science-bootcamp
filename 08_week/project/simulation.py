@@ -126,7 +126,7 @@ class CustomerView:
         if last_section_info['type'] == 'section' and section_info['type'] == 'section':
             # do fancy transition
             last_ideal_pos = np.array(last_section_info['pos'], dtype=float)
-            t = get_fancy_transformer(src=self._pos, src_ideal=last_ideal_pos, dest=dest, scale_vertical_offset=1.5)
+            t = get_fancy_transformer(src=self._pos, src_ideal=last_ideal_pos, dest=dest, scale_vertical_offset=1.1)
 
         transformer = Ramp(n_ticks=30, transformer=t)
         self._transformer_queue.put(transformer)
@@ -140,7 +140,7 @@ class CustomerView:
 
         n_ticks = round(duration * 20.)
         transformer = TransformerWiggleWaggle(center_pos=np.array(section_info['pos'], dtype=float)
-                                             , deviation=120
+                                             , deviation=100
                                              , n_ticks=n_ticks
                                              , interval_ticks=3)
         self._transformer_queue.put(transformer)
