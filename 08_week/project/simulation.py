@@ -40,9 +40,9 @@ def get_fancy_transformer(src, src_ideal, dest, scale_vertical_offset=1.2):
 class Ramp:
     """Ramps a float from 0 to 1 within n ticks and applies a transform to it."""
     def __init__(self, n_ticks=10, transformer=smoothstep):
-        self.n_ticks = int(n_ticks)
+        self.n_ticks = max(1,int(n_ticks))
         self._transformer = transformer
-        self.reset(n_ticks)
+        self.reset()
 
     def reset(self, n_ticks=None):
         self._value = 0.
@@ -138,7 +138,7 @@ class CustomerView:
         section, duration = self._model.get_state()
         section_info = self._map[section]
 
-        n_ticks = round((duration+1) * 20.)
+        n_ticks = round(duration * 20.)
         transformer = TransformerWiggleWaggle(center_pos=np.array(section_info['pos'], dtype=float)
                                              , deviation=120
                                              , n_ticks=n_ticks

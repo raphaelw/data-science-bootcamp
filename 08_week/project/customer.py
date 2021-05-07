@@ -39,7 +39,7 @@ class CustomerModel:
             self._mean_durations = json.load(f)
 
         self.state = 'entrance'
-        self.duration = 0.5 * customer_id
+        self.duration = 0.5# * customer_id
 
     def get_state(self):
         """Returns tuple containing: state, duration"""
