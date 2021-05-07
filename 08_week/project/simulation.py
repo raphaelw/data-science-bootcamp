@@ -67,7 +67,7 @@ class TransformerWiggleWaggle:
         self._center_pos = np.array(center_pos, dtype=float)
         self._deviation = float(deviation)
         self._ramp = Ramp(n_ticks=int(n_ticks))
-        self._interval_ticks = int(interval_ticks)
+        self._interval_ticks = max(1,int(interval_ticks))
         self._tick_counter = 0
 
         self._noise = np.zeros_like(self._center_pos)
@@ -96,8 +96,9 @@ def position(supermarket, section):
     return np.array( supermarket[section]['pos'] , dtype=float )
 
 class CustomerView:
-    def __init__(self, supermarket_map, customer_id):
+    def __init__(self, supermarket_map, customer_id, fps=25.):
         self._map = supermarket_map
+        self._fps = float(fps)
         self._model = CustomerModel(customer_id=customer_id)
         
         self._transformer_queue = queue.Queue()
@@ -128,7 +129,7 @@ class CustomerView:
             last_ideal_pos = np.array(last_section_info['pos'], dtype=float)
             t = get_fancy_transformer(src=self._pos, src_ideal=last_ideal_pos, dest=dest, scale_vertical_offset=1.1)
 
-        transformer = Ramp(n_ticks=30, transformer=t)
+        transformer = Ramp(n_ticks=1.5*self._fps, transformer=t)
         self._transformer_queue.put(transformer)
 
         self._enqueue_wait_animation()
@@ -138,11 +139,11 @@ class CustomerView:
         section, duration = self._model.get_state()
         section_info = self._map[section]
 
-        n_ticks = round(duration * 20.)
+        n_ticks = round(duration * self._fps)
         transformer = TransformerWiggleWaggle(center_pos=np.array(section_info['pos'], dtype=float)
-                                             , deviation=100
+                                             , deviation=50
                                              , n_ticks=n_ticks
-                                             , interval_ticks=3)
+                                             , interval_ticks=0.1*self._fps)
         self._transformer_queue.put(transformer)
 
     def tick(self):
@@ -172,8 +173,8 @@ class CustomerView:
 
 
 class SupermarketConductor:
-    def __init__(self, num_of_customers, supermarket_map):
-        self.artists = [ CustomerView(supermarket_map=supermarket_map, customer_id=i+1) for i in range(num_of_customers) ]
+    def __init__(self, num_of_customers, supermarket_map, fps):
+        self.artists = [ CustomerView(supermarket_map=supermarket_map, customer_id=i+1, fps=fps) for i in range(num_of_customers) ]
 
     def draw(self,frame):
         for artist in self.artists:
@@ -268,7 +269,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     # ------------------------------
     
-    fps = 25
+    fps = 60
     frame_interval_ms = int(1000./fps)
     width = 720
     height = 480
@@ -284,7 +285,7 @@ if __name__ == "__main__":
     from customer import CustomerModel as CustomerModel
     #from customer import CustomerModelDummy as CustomerModel
 
-    composer = SupermarketConductor(200, supermarket_map)
+    composer = SupermarketConductor(200, supermarket_map, fps)
 
     while True:
         frame = background.copy()
