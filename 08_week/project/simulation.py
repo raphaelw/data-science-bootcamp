@@ -262,10 +262,24 @@ def prepare_supermarket_map(width=1000, height=800):
     return image, supermarket_map
 
 if __name__ == "__main__":
+    import argparse
+    parser = argparse.ArgumentParser(description='Animation of customers in a supermarket.')
+    parser.add_argument('-r', '--render', required=False, type=str, help='Render animation to the specified file.', metavar='FILE')
+    args = parser.parse_args()
+    # ------------------------------
+    
     fps = 25
     frame_interval_ms = int(1000./fps)
+    width = 720
+    height = 480
 
-    background, supermarket_map = prepare_supermarket_map()
+    # prepare video writer
+    video_writer = None
+    if args.render:
+        fourcc = cv2.VideoWriter_fourcc(*'X264')
+        video_writer = cv2.VideoWriter(args.render, fourcc, float(fps), (width,height))
+
+    background, supermarket_map = prepare_supermarket_map(width=width, height=height)
 
     from customer import CustomerModel as CustomerModel
     #from customer import CustomerModelDummy as CustomerModel
@@ -277,11 +291,14 @@ if __name__ == "__main__":
         composer.draw(frame)
 
         cv2.imshow("frame", frame)
+        if video_writer is not None:
+            video_writer.write(frame)
 
         key = chr(cv2.waitKey(delay=frame_interval_ms) & 0xFF)
         if key == "q":
             break
-
+    
+    video_writer.release()
     cv2.destroyAllWindows()
 
     #market.write_image("supermarket.png")
