@@ -4,7 +4,7 @@ from functools import partial
 import numpy as np
 import cv2
 
-from customer import CustomerModel
+#from customer import CustomerModel
 
 """ NOTES
 draw stuff: https://docs.opencv.org/master/dc/da5/tutorial_py_drawing_functions.html
@@ -266,6 +266,9 @@ if __name__ == "__main__":
     frame_interval_ms = int(1000./fps)
 
     background, supermarket_map = prepare_supermarket_map()
+
+    from customer import CustomerModel as CustomerModel
+    #from customer import CustomerModelDummy as CustomerModel
 
     composer = SupermarketConductor(200, supermarket_map)
 

@@ -3,8 +3,35 @@ import json
 
 import numpy as np
 
+"""
+User Story:
+    - As a data scientist
+    - I want to be able to customize the customer behaviour,
+    - so that I can animate different customer models.
+"""
+
+class CustomerModelDummy:
+    def __init__(self, customer_id=1):
+        self.state = 'entrance'
+
+    def get_state(self): # -> (state, duration)
+        return self.state, 1.5
+
+    def next_state(self):
+        if self.state == 'entrance':
+            self.state = 'fruit'
+        elif self.state == 'fruit':
+            self.state = 'dairy'
+        elif self.state == 'dairy':
+            self.state = 'checkout'
+        else:
+            self.state = None
+
+    def done(self): # -> bool
+        return self.state is None
+
 class CustomerModel:
-    """Cutomer dummy model. Completely random transitions."""
+    """Cutomer model based on MCMC. Completely random transitions."""
     def __init__(self, customer_id=1):
         with open('data/transition_matrix.json', 'rb') as f:
             self._transition_matrix = json.load(f)
