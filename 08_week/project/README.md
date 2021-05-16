@@ -8,6 +8,12 @@ Simulation of customers in a supermarket.
 python simulation.py
 ```
 
+You can also render the animation to a video file:
+
+```
+python simulation.py -r path/to/video.mp4
+```
+
 ## Dependencies
 
 * OpenCV (opencv-python)
