@@ -298,8 +298,8 @@ if __name__ == "__main__":
         key = chr(cv2.waitKey(delay=frame_interval_ms) & 0xFF)
         if key == "q":
             break
-    
-    video_writer.release()
+    if video_writer is not None:
+        video_writer.release()
     cv2.destroyAllWindows()
 
     #market.write_image("supermarket.png")
