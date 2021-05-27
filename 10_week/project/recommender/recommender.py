@@ -8,14 +8,14 @@ from sklearn.metrics.pairwise import cosine_similarity
 from fuzzywuzzy import process
 from random import sample as random_sample
 
-WEB_APP_DATA_ROOT = os.path.join(os.path.dirname(__file__),"data")
+DATA_ROOT = os.path.join(os.path.dirname(__file__),"data")
 
 def clamp(x,mn,mx):
     """ clamp x to range of [mn,mx] """
     return min(max(mn,x),mx)
 
 class RecommenderCossim:
-    def __init__(self, movie_vecs_path=os.path.join(WEB_APP_DATA_ROOT,'movie_vectors.json')):
+    def __init__(self, movie_vecs_path=os.path.join(DATA_ROOT,'movie_vectors.json')):
         movie_vectors = pd.read_json(movie_vecs_path)
         self.movie_similarities = pd.DataFrame(data=cosine_similarity(movie_vectors),
                                                columns=movie_vectors.index,

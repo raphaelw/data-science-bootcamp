@@ -1,7 +1,5 @@
 from flask import Flask, render_template, request, send_from_directory, g
-from simple_recommender import get_recommendations
 import os.path
-#from interface import movies_genre, ratings
 from recommender import RecommenderCossim
 
 app = Flask(__name__)
@@ -33,8 +31,6 @@ def recommender():
     user_ratings = dict(zip(title, rating))
     print(user_ratings)
 
-    #recs = recommend_most_popular(user_rating, movies_genre, ratings)
-    recs = get_recommendations()
     matched_movies, recommendations = get_recommender().recommend_from_ratings(user_ratings, k=5)
 
     return render_template('recommender.html', recommendations=recommendations, matched_movies=matched_movies)
