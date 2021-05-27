@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <h2>You might enjoy:</h2>
+    <ul class="list-group col-md-6 mx-auto">
+    {% for recommendation in recommendations %}
+        <li class="list-group-item">{{ recommendation }}</li>
+    {% endfor %}
+    </ul>
+    <div class="col-12 mt-4 mb-2">
+        Recommendations are based on your rated movies:
+    </div>
+    <ul class="list-group col-md-6 mx-auto">
+        {% for key, value in matched_movies.items() %}
+            <li class="list-group-item">{{ key }} [{{ value }}]</li>
+        {% endfor %}
+    </ul>
+    
+{% endblock %}

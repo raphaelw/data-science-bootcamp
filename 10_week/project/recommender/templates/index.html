@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="col-12">
+    <p class="fs-4">Please enter movie titles and ratings for a recommendation.</p>
+</div>
+<form action="/recommender" class="row g-3 col-md-9 mx-auto">
+    <div class="col-8">
+        Movie you liked
+    </div>
+    <div class="col-4">
+        How much did you like it?
+    </div>
+
+    {% for i in range(3) %}
+    <div class="col-8">
+        <input type="text" name="movie_title" class="form-control" placeholder="Movie title" aria-label="First name" required>
+    </div>
+    <div class="col-4">
+        <input type="range" name="movie_rating" class="form-range align-middle" min=1 max=5 step=0.1 required>
+    </div>
+    {% endfor %}
+    
+    <div class="col-12">
+        <input type="submit" class="btn btn-primary" value="Get Recommendations">
+    </div>
+</form>
+
+{% endblock %}
