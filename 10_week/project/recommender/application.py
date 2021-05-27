@@ -29,7 +29,7 @@ def recommender():
 
     #rating = request.args['movie_rating'] # to grab value using key from URL 
     user_ratings = dict(zip(title, rating))
-    print(user_ratings)
+    #print(user_ratings)
 
     matched_movies, recommendations = get_recommender().recommend_from_ratings(user_ratings, k=5)
 
