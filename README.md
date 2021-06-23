@@ -18,7 +18,7 @@ My notebooks, learnings and results from a 12 week Data Science course at Spiced
     - Encoding strategies e.g. one-hot, ordinal, etc
     - Polynomial and interaction terms
 - Designing preprocessing __pipelines__ (sklearn)
-- Logistic Regression in math and application (sklearn)
+- __Logistic Regression__ in math and application (sklearn)
 
 [**Project:**](02_week/project/titanic_survival_prediction.ipynb) Titanic survival prediction ([kaggle competition](https://www.kaggle.com/c/titanic)) using basic feature engineering and logistic regression.
 
