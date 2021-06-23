@@ -59,7 +59,18 @@ My notebooks, learnings and results from a 12 week Data Science course at Spiced
 [**Presentation:**](04_week/lightning_talk/talk.ipynb) How I gathered lyrics data with an own [scraper](04_week/project/lyrics_scraping) based on scrapy.
 
 
-## Week 5
+## Week 5: Dashboards, Clouds & Databases
+
+- Relational databases (__PostreSQL__), Data modeling, SQL (Python SQLAlchemy)
+- __Cloud computing__ on AWS
+    - Unix administration basics
+    - Setup PostgreSQL on AWS
+    - Setup Metabase dashboard on  AWS (EC2)
+    - 
+[**Project:**](05_week/project/metabase_aws_hosted.png) Metabase dashboard deployed on AWS.
+
+[**Presentation:**](05_week/project/lyrics_graph.ipynb) Use lyrics data from week 4 to create a clustered [map](05_week/project/lyrics_map.pdf) of songs using the ForceAtlas2 algorithm available in Gephi. It uses physical modelling of masses and springs to visualize a graph. The approach failed most likely due to curse of dimensionality.
+
 
 ## Week 6
 
