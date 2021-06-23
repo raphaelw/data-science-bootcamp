@@ -59,7 +59,7 @@ My notebooks, learnings and results from a 12 week Data Science course at Spiced
 [**Presentation:**](04_week/lightning_talk/talk.ipynb) How I gathered lyrics data with an own [scraper](04_week/project/lyrics_scraping) based on scrapy.
 
 
-## Week 5: Dashboards, Clouds & Databases
+## Week 5: Dashboards, Cloud & Databases
 
 - Relational databases (__PostreSQL__), Data modeling, SQL (Python SQLAlchemy)
 - __Cloud computing__ on AWS
