@@ -1,6 +1,7 @@
 # Data Science Bootcamp
 My notebooks, learnings and results from a 12 week Data Science course at Spiced Academy
 
+
 ## Week 1: Data Wrangling
 
 - __Machine Learning Workflow__: Steps how to approach a new dataset
@@ -12,6 +13,7 @@ My notebooks, learnings and results from a 12 week Data Science course at Spiced
 [**Project:**](01_week/weekly_project/) Recreation of the famous animated scatterplot by Hans Rosling.
 
 [**Presentation:**](01_week/fizzbuzz_cleancode.ipynb) Essentials of clean code inspired by Uncle Bob (Robert C. Martin).
+
 
 ## Week 2: Classification Problem
 
@@ -27,6 +29,7 @@ My notebooks, learnings and results from a 12 week Data Science course at Spiced
 
 [**Presentation:**](02_week/project/correlations.ipynb) About the different kinds of **correlations** (pearson, kendall & spearman).
 
+
 ## Week 3: Regression Problem
 
 - Math and implementation of __gradient descent__ algorithm for linear regression.
@@ -40,7 +43,21 @@ My notebooks, learnings and results from a 12 week Data Science course at Spiced
 
 [**Presentation:**](03_week/project/loss_function_3d_plot.png) 3D surface plot using matplotlib to get an intuition on loss functions and the gradient descent approach.
 
-## Week 4
+
+## Week 4: Naive Bayes Classification and NLP
+
+- __Naive Bayes__ classification
+    - Theory
+    - Application (sklearn)
+- Natural Language Processing (NLP)
+    - Vectorization of text: Bag-of-words, __TF-IDF__
+- __Class balancing__ strategies
+- Web scraping, parsing, regular expressions, scrapy
+
+[**Project:**](04_week/project/nlp_lyrics_classification.ipynb) Classification (Multinomial Naive Bayes) of a text phrase to a musical artist based on their lyrics.
+
+[**Presentation:**](04_week/lightning_talk/talk.ipynb) How I gathered lyrics data with an own [scraper](04_week/project/lyrics_scraping) using scrapy.
+
 
 ## Week 5
 
