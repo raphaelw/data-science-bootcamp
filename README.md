@@ -12,7 +12,15 @@ My notebooks, learnings and results from a 12 week Data Science course at Spiced
 
 ## Week 2
 
-[**Project:**](02_week/project/titanic_survival_prediction.ipynb) Titanic survival prediction ([kaggle competition](https://www.kaggle.com/c/titanic)).
+- __Machine Learning Workflow__: Steps how to approach a new dataset
+- __Data exploration__, __cleaning__, __imputation__
+- __Feature enginerring__
+    - Encoding strategies e.g. one-hot, ordinal, etc
+    - Polynomial and interaction terms
+- Designing preprocessing __pipelines__ (sklearn)
+- Logistic Regression in math and application (sklearn)
+
+[**Project:**](02_week/project/titanic_survival_prediction.ipynb) Titanic survival prediction ([kaggle competition](https://www.kaggle.com/c/titanic)) using basic feature engineering and logistic regression.
 
 [**Presentation:**](02_week/project/correlations.ipynb) About the different kinds of **correlations** (pearson, kendall & spearman).
 
