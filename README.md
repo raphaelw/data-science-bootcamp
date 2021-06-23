@@ -31,6 +31,8 @@ My notebooks, learnings and results from a 12 week Data Science course at Spiced
 - __Linear regression__
     - __Regularization__ strategies: Lasso (L1), Rigde (L2), ElasticNet
     - Model __evaluation__: R2 score
+- Feature expansion
+- __Hyperparameter optimization__ (sklearn)
 
 [**Project:**](03_week/project/bike_sharing_demand_kaggle.ipynb) Prediction of bike sharing demand ([kaggle competition](https://www.kaggle.com/c/bike-sharing-demand/)). Submission to kaggle.
 
