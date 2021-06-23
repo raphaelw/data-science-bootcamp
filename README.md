@@ -19,7 +19,7 @@ My notebooks, learnings and results from a 12 week Data Science course at Spiced
     - Polynomial and interaction terms
 - Designing preprocessing __pipelines__ (sklearn)
 - __Logistic regression__ in math and application (sklearn)
-- __Evaluation__ of classifiers: Precision, recall, F1-score
+- __Evaluation__ of classifiers: Cross-Validation, Precision, Recall, F1-score
 
 [**Project:**](02_week/project/titanic_survival_prediction.ipynb) Titanic survival prediction ([kaggle competition](https://www.kaggle.com/c/titanic)) using basic feature engineering and logistic regression.
 
