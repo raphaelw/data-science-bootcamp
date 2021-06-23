@@ -56,7 +56,7 @@ My notebooks, learnings and results from a 12 week Data Science course at Spiced
 
 [**Project:**](04_week/project/nlp_lyrics_classification.ipynb) Classification (Multinomial Naive Bayes) of a text phrase to a musical artist based on their lyrics.
 
-[**Presentation:**](04_week/lightning_talk/talk.ipynb) How I gathered lyrics data with an own [scraper](04_week/project/lyrics_scraping) using scrapy.
+[**Presentation:**](04_week/lightning_talk/talk.ipynb) How I gathered lyrics data with an own [scraper](04_week/project/lyrics_scraping) based on scrapy.
 
 
 ## Week 5
