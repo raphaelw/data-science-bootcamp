@@ -6,6 +6,8 @@ My notebooks, learnings and results from a 12 week Data Science course at Spiced
 - __Machine Learning Workflow__: Steps how to approach a new dataset
 - **Data wrangling** (pandas)
 - Technical and design aspects of **plotting data** (matplotlib, seaborn)
+- Descriptive statistics
+- Pivoting / Wide and narrow data (pandas)
 
 [**Project:**](01_week/weekly_project/) Recreation of the famous animated scatterplot by Hans Rosling.
 
