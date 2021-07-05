@@ -10,9 +10,9 @@ My notebooks, learnings and results from a 12 week Data Science course at Spiced
 - Descriptive statistics
 - Pivoting / Wide and narrow data (pandas)
 
-[**Project:**](01_week/weekly_project/) Recreation of the famous animated scatterplot by Hans Rosling.
+[**Project**](01_week/weekly_project/): Recreation of the famous animated scatterplot by Hans Rosling.
 
-[**Presentation:**](01_week/fizzbuzz_cleancode.ipynb) Essentials of clean code inspired by Uncle Bob (Robert C. Martin).
+[**Presentation**](01_week/fizzbuzz_cleancode.ipynb): Essentials of clean code inspired by Uncle Bob (Robert C. Martin).
 
 
 ## Week 2: Classification Problem
@@ -25,9 +25,9 @@ My notebooks, learnings and results from a 12 week Data Science course at Spiced
 - __Logistic regression__ in math and application (sklearn)
 - __Evaluation__ of classifiers: Cross-Validation, Precision, Recall, F1-score
 
-[**Project:**](02_week/project/titanic_survival_prediction.ipynb) Titanic survival prediction ([kaggle competition](https://www.kaggle.com/c/titanic)) using basic feature engineering and logistic regression.
+[**Project**](02_week/project/titanic_survival_prediction.ipynb): Titanic survival prediction ([kaggle competition](https://www.kaggle.com/c/titanic)) using basic feature engineering and logistic regression.
 
-[**Presentation:**](02_week/project/correlations.ipynb) About the different kinds of **correlations** (pearson, kendall & spearman).
+[**Presentation**](02_week/project/correlations.ipynb): About the different kinds of **correlations** (pearson, kendall & spearman).
 
 
 ## Week 3: Regression Problem
@@ -39,9 +39,9 @@ My notebooks, learnings and results from a 12 week Data Science course at Spiced
 - Feature expansion
 - __Hyperparameter optimization__ (sklearn)
 
-[**Project:**](03_week/project/bike_sharing_demand_kaggle.ipynb) Prediction of bike sharing demand ([kaggle competition](https://www.kaggle.com/c/bike-sharing-demand/)). Submission to kaggle.
+[**Project**](03_week/project/bike_sharing_demand_kaggle.ipynb): Prediction of bike sharing demand ([kaggle competition](https://www.kaggle.com/c/bike-sharing-demand/)). Submission to kaggle.
 
-[**Presentation:**](03_week/project/loss_function_3d_plot.png) 3D surface plot using matplotlib to get an intuition on loss functions and the gradient descent approach.
+[**Presentation**](03_week/project/loss_function_3d_plot.png): 3D surface plot using matplotlib to get an intuition on loss functions and the gradient descent approach.
 
 
 ## Week 4: Naive Bayes Classification and NLP
@@ -54,9 +54,9 @@ My notebooks, learnings and results from a 12 week Data Science course at Spiced
 - __Class balancing__ strategies
 - Web scraping, parsing, regular expressions, scrapy
 
-[**Project:**](04_week/project/nlp_lyrics_classification.ipynb) Classification (Multinomial Naive Bayes) of a text phrase to a musical artist based on their lyrics.
+[**Project**](04_week/project/nlp_lyrics_classification.ipynb): Classification (Multinomial Naive Bayes) of a text phrase to a musical artist based on their lyrics.
 
-[**Presentation:**](04_week/lightning_talk/talk.ipynb) How I gathered lyrics data with an own [scraper](04_week/project/lyrics_scraping) based on scrapy.
+[**Presentation**](04_week/lightning_talk/talk.ipynb): How I gathered lyrics data with an own [scraper](04_week/project/lyrics_scraping) based on scrapy.
 
 
 ## Week 5: Dashboards, Cloud & Databases
@@ -67,9 +67,9 @@ My notebooks, learnings and results from a 12 week Data Science course at Spiced
     - Setup PostgreSQL on AWS
     - Setup Metabase dashboard on  AWS (EC2)
 
-[**Project:**](05_week/project/metabase_aws_hosted.png) Metabase dashboard deployed on AWS.
+[**Project**](05_week/project/metabase_aws_hosted.png): Metabase dashboard deployed on AWS.
 
-[**Presentation:**](05_week/project/lyrics_graph.ipynb) Used lyrics data from week 4 to create a clustered [map](05_week/project/lyrics_map.pdf) of songs using the ForceAtlas2 algorithm available in Gephi. It uses physical modelling of masses and springs to visualize a graph. The approach failed most likely due to curse of dimensionality.
+[**Presentation**](05_week/project/lyrics_graph.ipynb): Used lyrics data from week 4 to create a clustered [map](05_week/project/lyrics_map.pdf) of songs using the ForceAtlas2 algorithm available in Gephi. It uses physical modelling of masses and springs to visualize a graph. The approach failed most likely due to curse of dimensionality.
 
 
 ## Week 6
