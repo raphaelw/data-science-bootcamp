@@ -107,6 +107,18 @@ My notebooks, learnings and results from a 12 week Data Science course at Spiced
 [**Presentation**](08_week/project): Software design of the project.
 
 
-## Week 9
+## Week 9: Artificial Neural Networks & Deep Learning
+
+- Feed-Forward Neural Networks
+- Convolutional Neural Networks for Image Processing
+- Backpropagation
+- Transfer Learning
+- Recurrent Neural Networks
+- __Keras__ (TensorFlow Interface)
+
+[**Project**](09_week): Image classification using transfer learning on a pretrained network (MobileNetV2).
+
+[**Presentation**](09_week/exercises/backpropagation_thoughts.pdf): Understanding the backpropagation algorithm by using a graph approach of the chain rule.
+
 
 ## Week 10
