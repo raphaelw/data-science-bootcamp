@@ -79,8 +79,15 @@ My notebooks, learnings and results from a 12 week Data Science course at Spiced
      - MongoDB NoSQL database
      - Web APIs (Twitter, Slack)
 
+[**Project**](06_week/project): Processing pipeline fetching tweets in real time from Twitter for a given Keyword and perform a sentiment analysis on them. Pipeline: Fetch (_Extract_) tweets -> Store in MongoDB -> _Load_ new tweets -> Perform sentiment analysis (_Transform_) -> Store tweet along with sentiment score in PostgreSQL.
+
+[**Presentation**](06_week/project): Debugging. What challenges I had to face and how I solved them.
+
 
 ## Week 7
+
+- 
+
 
 ## Week 8
 
