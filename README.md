@@ -86,7 +86,7 @@ My notebooks, learnings and results from a 12 week Data Science course at Spiced
 
 ## Week 7: Time Series
 
-- __ARIMA__ Model
+- __ARIMA__ Model, (Partial) autocorrelation function
 - Evaluating Forecasts
 - Statistical distribution functions
 
