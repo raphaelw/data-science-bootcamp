@@ -84,9 +84,15 @@ My notebooks, learnings and results from a 12 week Data Science course at Spiced
 **Presentation**: Debugging. What challenges I faced during the project and how I solved them.
 
 
-## Week 7
+## Week 7: Time Series
 
-- 
+- __ARIMA__ Model
+- Evaluating Forecasts
+- Statistical distribution functions
+
+[**Project**](07_week/project/time_series_weather.ipynb): Manual step-by-step ARIMA modelling of weather data.
+
+[**Presentation**](07_week/project/time_series_weather.ipynb): Introduction to sonification of time series data.
 
 
 ## Week 8
