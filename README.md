@@ -136,3 +136,8 @@ My notebooks, learnings and results from a 12 week Data Science course at Spiced
 [**Project**](10_week/project/recommender): Movie recommender based on cosine similarity approach and a movie rating data set. See deployed Web App at [mega-movie-recommender.herokuapp.com](https://mega-movie-recommender.herokuapp.com/)
 
 [**Presentation**](10_week/project/cosine_similarity_recommendation.ipynb): Details of my approach for the movie recommender. 
+
+
+## Week 11-12: Final Project
+
+Topic Modelling on Bundestag Speeches (German Parliament). See [github.com/raphaelw/nlp-bundestag](https://github.com/raphaelw/nlp-bundestag)
