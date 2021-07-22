@@ -72,7 +72,13 @@ My notebooks, learnings and results from a 12 week Data Science course at Spiced
 [**Presentation**](05_week/project/lyrics_graph.ipynb): Used lyrics data from week 4 to create a clustered [map](05_week/project/lyrics_map.pdf) of songs using the ForceAtlas2 algorithm available in Gephi. It uses physical modelling of masses and springs to visualize a graph. The approach failed most likely due to curse of dimensionality.
 
 
-## Week 6
+## Week 6: ETL Pipeline, Sentiment Analysis of Tweets
+
+- Basics of __Sentiment Analysis__ (NLP)
+- __ETL (Extract, Transform, Load)__ pipeline with __Docker Compose__
+     - MongoDB NoSQL database
+     - Web APIs (Twitter, Slack)
+
 
 ## Week 7
 
