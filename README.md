@@ -95,7 +95,17 @@ My notebooks, learnings and results from a 12 week Data Science course at Spiced
 [**Presentation**](07_week/project/time_series_weather.ipynb): Introduction to sonification of time series data.
 
 
-## Week 8
+## Week 8: Markov Chain Monte Carlo (MCMC)
+
+- __Markov Chains__ & Monte Carlo simulations
+- Linear Algebra
+- __OpenCV__
+- Software Design, OOP & Code Style
+
+[**Project**](08_week/project): Simulation of an average day in a supermarket based on the data analysis of its customer data. Animated visualization using OpenCV of simulated customers.
+
+[**Presentation**](08_week/project): Software design of the project.
+
 
 ## Week 9
 
