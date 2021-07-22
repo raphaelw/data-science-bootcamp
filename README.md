@@ -90,7 +90,7 @@ My notebooks, learnings and results from a 12 week Data Science course at Spiced
 - Evaluating Forecasts
 - Statistical distribution functions
 
-[**Project**](07_week/project/time_series_weather.ipynb): Manual step-by-step ARIMA modelling of weather data.
+[**Project**](07_week/project/time_series_weather.ipynb): Manual step-by-step ARIMA modelling of weather data. Frequency analysis using signal processing techniques (Fourier transform).
 
 [**Presentation**](07_week/project/time_series_weather.ipynb): Introduction to sonification of time series data.
 
