@@ -121,4 +121,18 @@ My notebooks, learnings and results from a 12 week Data Science course at Spiced
 [**Presentation**](09_week/exercises/backpropagation_thoughts.pdf): Understanding the backpropagation algorithm by using a graph approach of the chain rule.
 
 
-## Week 10
+## Week 10: Unsupervised Learning & Recommender Systems
+
+- __Principal Component Analysis__ (PCA)
+- t-SNE
+- Non-negative Matrix Factorization (NMF)
+- Nearest neighbour approaches
+    - Clustering
+    - Cosine similarity
+- Web App
+    - Python Flask, Jinja & Bootstrap
+    - Deployment on Heroku
+
+[**Project**](10_week/project/recommender): Movie recommender based on cosine similarity approach and a movie rating data set. See deployed Web App at [mega-movie-recommender.herokuapp.com](https://mega-movie-recommender.herokuapp.com/)
+
+[**Presentation**](10_week/project/cosine_similarity_recommendation.ipynb): Details of my approach for the movie recommender. 
