@@ -133,7 +133,7 @@ My notebooks, learnings and results from a 12 week Data Science course at Spiced
     - Python Flask, Jinja & Bootstrap
     - Deployment on Heroku
 
-[**Project**](10_week/project/recommender): Movie recommender based on cosine similarity approach and a movie rating data set. See deployed Web App at [mega-movie-recommender.herokuapp.com](https://mega-movie-recommender.herokuapp.com/)
+[**Project**](10_week/project/recommender): Movie recommender based on cosine similarity approach and a movie rating data set. See deployed web app at [mega-movie-recommender.herokuapp.com](https://mega-movie-recommender.herokuapp.com/)
 
 [**Presentation**](10_week/project/cosine_similarity_recommendation.ipynb): Details of my approach for the movie recommender. 
 
