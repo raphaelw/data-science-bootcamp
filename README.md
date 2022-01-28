@@ -34,7 +34,7 @@ My notebooks, learnings and results from a 12 week Data Science course at Spiced
 
 - Math and implementation of __gradient descent__ algorithm for linear regression.
 - __Linear regression__
-    - __Regularization__ strategies: Lasso (L1), Rigde (L2), ElasticNet
+    - __Regularization__ strategies: Lasso (L1), Ridge (L2), ElasticNet
     - Model __evaluation__: R2 score
 - Feature expansion
 - __Hyperparameter optimization__ (sklearn)
